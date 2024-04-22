@@ -10,17 +10,17 @@ pub struct Event<F>
 where
     F: FnOnce(DateTime<Utc>),
 {
-    id: usize,
-    time: DateTime<Utc>,
-    func: F,
+    time: DateTime<Utc>, // When it should activate
+    func: F,             // What will be executed
 }
 
 impl<F> Event<F>
 where
     F: FnOnce(DateTime<Utc>),
 {
-    pub fn new(id: usize, time: DateTime<Utc>, func: F) -> Self {
-        Event { id, time, func }
+    /// Create a new event object
+    pub fn new(time: DateTime<Utc>, func: F) -> Self {
+        Event { time, func }
     }
 
     /// Returns true when timer has expired
@@ -31,7 +31,7 @@ where
 
     /// Execute event (consumes object)
     pub(crate) fn execute(self) {
-        (self.func)(get_current_time());
+        (self.func)(self.time);
     }
 }
 
@@ -39,8 +39,9 @@ impl<F> PartialEq for Event<F>
 where
     F: FnOnce(DateTime<Utc>),
 {
+    /// Are events equal
     fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
+        self.time == other.time
     }
 }
 impl<F> Eq for Event<F> where F: FnOnce(DateTime<Utc>) {}
@@ -48,6 +49,7 @@ impl<F> PartialOrd for Event<F>
 where
     F: FnOnce(DateTime<Utc>),
 {
+    /// Compares events
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
@@ -56,7 +58,8 @@ impl<F> Ord for Event<F>
 where
     F: FnOnce(DateTime<Utc>),
 {
+    /// Compares order of ids
     fn cmp(&self, other: &Self) -> Ordering {
-        self.id.cmp(&other.id)
+        self.time.cmp(&other.time)
     }
 }
