@@ -6,7 +6,14 @@ description = "A crate that offers event scheduling"
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "scheduled"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mybin"
+path = "src/bin.rs"
 
 [dependencies]
 chrono = "0.4.38"
-queued_rust = "0.3.5"
+queued_rust = "0.5.3"

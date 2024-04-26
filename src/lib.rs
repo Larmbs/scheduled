@@ -1,10 +1,11 @@
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Utc};
 /// Queue meant to better organize project and speed up searching
-use queued_rust::SortedQueue;
+use queued_rust::{QueueType, SortedQueue};
 
 /// Event module represents events
 mod event;
 pub use event::Event;
+pub use chrono::Duration;
 
 pub struct Scheduler<F>
 where
@@ -42,18 +43,22 @@ where
     }
 
     /// Checks if any event has pasts its time and then runs their events
-    pub fn check(&mut self) {
+    pub fn check(&mut self) -> bool {
+        let mut has_expired = false;
         // Iterates over whole loop as long as there are items
         while let Some(item) = self.queue.first() {
             if item.has_expired() {
                 // Checks if item has past expiration
                 if let Some(item) = self.queue.pop() {
                     item.execute(); // Executes
+                    has_expired = true;
                 }
             } else {
                 break; // Exit
             }
         }
+
+        has_expired
     }
 }
 
