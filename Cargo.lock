@@ -149,7 +149,7 @@ dependencies = [
 
 [[package]]
 name = "scheduled"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "chrono",
  "queued_rust",

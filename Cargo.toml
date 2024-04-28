@@ -1,9 +1,13 @@
 [package]
 name = "scheduled"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"
-description = "A crate that offers event scheduling"
+description = "A simple event scheduler"
 license = "MIT"
+repository = "https://github.com/Larmbs/scheduled"
+documentation = "https://docs.rs/scheduled/latest/scheduled/"
+readme = "README.md"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
