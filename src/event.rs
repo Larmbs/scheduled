@@ -6,20 +6,16 @@ fn get_current_time() -> DateTime<Utc> {
     Utc::now()
 }
 
-pub struct Event<F>
-where
-    F: FnOnce(DateTime<Utc>),
-{
+pub type EventFunc = Box<dyn FnOnce(DateTime<Utc>)>;
+
+pub struct Event {
     time: DateTime<Utc>, // When it should activate
-    func: F,             // What will be executed
+    func: EventFunc,     // What will be executed
 }
 
-impl<F> Event<F>
-where
-    F: FnOnce(DateTime<Utc>),
-{
+impl Event {
     /// Create a new event object
-    pub fn new(time: DateTime<Utc>, func: F) -> Self {
+    pub fn new(time: DateTime<Utc>, func: EventFunc) -> Self {
         Event { time, func }
     }
 
@@ -35,29 +31,20 @@ where
     }
 }
 
-impl<F> PartialEq for Event<F>
-where
-    F: FnOnce(DateTime<Utc>),
-{
+impl PartialEq for Event {
     /// Are events equal
     fn eq(&self, other: &Self) -> bool {
         self.time == other.time
     }
 }
-impl<F> Eq for Event<F> where F: FnOnce(DateTime<Utc>) {}
-impl<F> PartialOrd for Event<F>
-where
-    F: FnOnce(DateTime<Utc>),
-{
+impl Eq for Event {}
+impl PartialOrd for Event {
     /// Compares events
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
-impl<F> Ord for Event<F>
-where
-    F: FnOnce(DateTime<Utc>),
-{
+impl Ord for Event {
     /// Compares order of ids
     fn cmp(&self, other: &Self) -> Ordering {
         self.time.cmp(&other.time)
